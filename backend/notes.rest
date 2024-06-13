@@ -1,0 +1,22 @@
+### get all notes
+GET http://localhost:3003/api/notes
+
+### create new note
+POST http://localhost:3003/api/persons
+Content-Type: application/json
+
+{
+  "name": "Postman test",
+  "number": "3124423"
+}
+
+### create new note empty
+POST http://localhost:3003/api/notes
+Content-Type: application/json
+
+
+### delete note by id
+DELETE http://localhost:3003/api/notes/2
+
+### get main
+GET http://localhost:3003
