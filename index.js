@@ -1,30 +1,13 @@
+require('dotenv').config()
 const express = require('express')
 const app = express()
 const cors = require('cors')
+const Contact = require('./models/contact')
+
 
 app.use(express.json())
 app.use(express.static('dist'))
 app.use(cors())
-
-let phonebook = [
-    {
-        "name": "Arto Hellas",
-        "number": "040-123456",
-        id: 1
-    },
-    {
-        "name": "Ada Lovelace",
-        "number": "39-44-5323523",
-        id: 2
-    }
-]
-
-const generateId = () => {
-    const maxId = phonebook.length > 0
-        ? Math.max(...phonebook.map(n => n.id))
-        : 0
-    return maxId + 1
-}
 
 const requestLogger = (request, response, next) => {
     console.log('Method:', request.method)
@@ -44,25 +27,15 @@ app.get('/', (request, response) => {
 })
 
 app.get('/api/persons', (request, response) => {
-    response.json(phonebook)
+    Contact.find({}).then(contacts => response.json(contacts))
 })
 
 app.get('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
-    console.log(id)
-    const contact = phonebook.find(contact => contact.id === id)
-    if (contact) {
-        response.json(contact)
-    } else {
-        response.statusMessage = "Contact not found"
-        response.status(404).end()
-    }
+    Contact.findById(request.params.id).then(contact => response.json(contact))
 })
 
 app.post('/api/persons', (request, response) => {
     const body = request.body
-
-    console.log("in bed", body)
 
     if (!body.name || !body.number) {
         return response.status(400).json({
@@ -70,24 +43,19 @@ app.post('/api/persons', (request, response) => {
         })
     }
 
-    const contact = {
+    const contact = new Contact({
         name: body.name,
-        number: body.number,
-        id: generateId(),
-    }
+        number: body.number
+    })
 
-    phonebook = phonebook.concat(contact)
-    response.json(contact)
+    contact.save().then(savedContact => response.json(savedContact))
 })
 
 app.delete('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
-    phonebook = phonebook.filter(contact => contact.id !== id)
-
     response.status(204).end()
 })
 
 
-const PORT = process.env.PORT || 3003
+const PORT = process.env.PORT
 app.listen(PORT)
 console.log(`Server running on port ${PORT}`)
