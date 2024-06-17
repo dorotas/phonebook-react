@@ -45,7 +45,7 @@ app.post('/api/persons', (request, response) => {
 
     const contact = new Contact({
         name: body.name,
-        number: body.number
+        phoneNumber: body.number
     })
 
     contact.save().then(savedContact => response.json(savedContact))

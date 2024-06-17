@@ -1,5 +1,5 @@
 ### get all notes
-GET http://localhost:3003/api/notes
+GET http://localhost:3003/api/persons
 
 ### create new note
 POST http://localhost:3003/api/persons
@@ -11,12 +11,12 @@ Content-Type: application/json
 }
 
 ### create new note empty
-POST http://localhost:3003/api/notes
+POST http://localhost:3003/api/persons
 Content-Type: application/json
 
 
 ### delete note by id
-DELETE http://localhost:3003/api/notes/2
+DELETE http://localhost:3003/api/persons/2
 
 ### get main
 GET http://localhost:3003

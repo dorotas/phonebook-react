@@ -95,7 +95,7 @@ const App = () => {
                 <ul>
                     {persons.map((person) => (
                         <li className='note' key={person.id}>
-                            {person.id} {person.name} {person.number}
+                            {person.name} {person.phoneNumber} {person.id}
                             {/*<button onClick={() => handleDelete(person.id)}>delete</button>*/}
                         </li>
                     ))}
