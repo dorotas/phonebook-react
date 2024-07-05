@@ -8,8 +8,8 @@ const addContact = (contact, replace= false) => {
             console.log("Create new", contact)
             return axios.post(baseUrl, contact).then(res => res.data)
         } else if (replace) {
+            console.log("Updated", contact)
             return axios.put(`${baseUrl}/${existingContact.id}`, contact).then(res => {
-                console.log(res)
                 return res.data
             })
         }

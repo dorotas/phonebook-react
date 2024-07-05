@@ -19,6 +19,15 @@ const requestLogger = (request, response, next) => {
 const unknownEndpoint = (request, response) => {
     response.status(404).send({ error: 'unknown endpoint' })
 }
+const errorHandler = (error, req, res, next) => {
+    console.error(error.message)
+
+    if (error.name === 'CastError') {
+        return response.status(400).send({ error: 'malformatted id' })
+    }
+
+    next(error)
+}
 
 app.use(requestLogger)
 
@@ -27,11 +36,26 @@ app.get('/', (request, response) => {
 })
 
 app.get('/api/persons', (request, response) => {
-    Contact.find({}).then(contacts => response.json(contacts))
+    Contact.find({}).then(contacts => {
+        response.json(contacts)
+    })
 })
 
 app.get('/api/persons/:id', (request, response) => {
     Contact.findById(request.params.id).then(contact => response.json(contact))
+})
+
+app.put('/api/persons/:id', (request, response) => {
+    const body = request.body
+
+    const contact = {
+        name: body.name,
+        phoneNumber: Number(body.number)
+    }
+
+    Contact.findByIdAndUpdate(request.params.id, contact, {new: true})
+        .then(updatedContact => response.json(updatedContact))
+        .catch(err => next(err))
 })
 
 app.post('/api/persons', (request, response) => {
@@ -52,8 +76,13 @@ app.post('/api/persons', (request, response) => {
 })
 
 app.delete('/api/persons/:id', (request, response) => {
-    response.status(204).end()
+    Contact.findByIdAndDelete (request.params.id)
+        .then(removedContact => response.json(removedContact))
 })
+
+
+app.use(unknownEndpoint)
+app.use(errorHandler)
 
 
 const PORT = process.env.PORT

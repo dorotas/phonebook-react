@@ -20,3 +20,15 @@ DELETE http://localhost:3003/api/persons/2
 
 ### get main
 GET http://localhost:3003
+
+### update
+PUT http://localhost:3003/api/persons/6688192fc000d296ffff4506
+Content-Type: application/json
+
+{
+  "name": "dsdsds",
+  "number": "1111"
+}
+
+### get by id
+GET http://localhost:3003/api/persons/6688192fc000d296ffff4506

@@ -46,11 +46,12 @@ const App = () => {
         phoneService.addContact(newPerson).then(addedResponse => {
             if (addedResponse === null) {
                 if(window.confirm('Are you sure you want to replace?')) {
-                    phoneService.addContact(newPerson, true).then( addedResponse => {
-                        setPersons(persons.filter(contact => contact.name !== addedResponse.name).concat(addedResponse))
+                    phoneService.addContact(newPerson, true).then( updatedContact => {
+                        setPersons(persons.filter(contact => contact.name !== updatedContact.name).concat(updatedContact))
+                        console.log("updated")
                         setNewName('')
                         setNewNumber('')
-                        setNotification(`${addedResponse.name} was updated successfully`)
+                        setNotification(`${updatedContact.name} was updated successfully`)
                         setTimeout(() => {
                             setNotification(null)
                         }, 5000)
@@ -96,7 +97,7 @@ const App = () => {
                     {persons.map((person) => (
                         <li className='note' key={person.id}>
                             {person.name} {person.phoneNumber} {person.id}
-                            {/*<button onClick={() => handleDelete(person.id)}>delete</button>*/}
+                            <button onClick={() => handleDelete(person.id)}>delete</button>
                         </li>
                     ))}
                 </ul>
